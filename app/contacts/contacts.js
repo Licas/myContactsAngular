@@ -125,6 +125,7 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
             console.log("Added contact with id: " + id);
 
             clearFields();
+
             scope.addFormShow = false;
             scope.message = "Contact added";
         });
@@ -133,6 +134,7 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
     scope.showContact = function(contact) {
         console.log("Getting contact");
 
+        scope.id = contact.$id;
         scope.name = contact.name;
         scope.company = contact.company;
         scope.email = contact.email;
@@ -154,9 +156,13 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
     }
 
     scope.showEditContactForm = function(contact) {
+        scope.id = contact.$id;
         scope.name = contact.name;
         scope.company = contact.company;
         scope.email = contact.email;
+
+        console.log("Showing edit form - " + contact.$id);
+
         if(contact.phones) {
             console.log("contact phones " + JSON.stringify(contact.phones));
             scope.work_phone = contact.phones[0].work;
@@ -174,6 +180,51 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
         scope.editFormShow = true;
     }
 
+    scope.editFormSubmit = function() {
+
+        var id = scope.id;
+        var record = scope.contacts.$getRecord(id);
+
+        //console.log("Retrieving contact with id="+id+"["+JSON.stringify(record)+"]");
+        record.name = scope.name;
+        record.company = scope.company;
+        record.email = scope.email;
+
+        if(!record.phones) {
+            record.phones = [];
+            record.phones.push({});
+        }
+        console.log(record.phones);
+
+        record.phones[0].work = scope.work_phone;
+        record.phones[0].home = scope.home_phone;
+        record.phones[0].mobile = scope.mobile_phone;
+
+        if(!record.address) {
+            record.address = [];
+            record.address.push({});
+            console.log(record.address);
+        }
+        record.address[0].street_address = scope.street_address;
+        record.address[0].city = scope.city  ;
+        record.address[0].state = scope.state;
+        record.address[0].zip_code = scope.zip_code;
+
+        //Save contact
+        scope.contacts.$save(record).then(function(ref){
+            console.log(ref.key);
+        });
+
+        clearFields();
+        scope.editFormShow = false;
+    }
+
+    scope.removeContact = function(contact) {
+        console.log("Removing contact: " + contact.$id);
+
+        scope.contacts.$remove(contact);
+        scope.message = "Contact " + contact.name + " deleted";
+    }
     function clearFields() {
         console.log("Clearing all fields");
 
