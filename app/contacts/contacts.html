@@ -1,6 +1,28 @@
 <div class="row" ng-controller="ContactsCtrl">
 
-    <form ng-show="addFormShow">
+  <div class="large-10 columns">
+    <div data-alert ng-show="message" class="alert-box">{{message}}</div>
+
+    <!-- -->
+    <div class="row" ng-show="contactShow">
+      <div class="panel">
+        <h3>{{name}}</h3>
+        <ul>
+            <li><strong>Company</strong>: {{company}}</li>
+            <li><strong>Email</strong>: {{email}}</li>
+            <h5>Phone numbers</h5>
+            <li><strong>Work</strong>: {{work_phone}}</li>
+            <li><strong>Home</strong>: {{home_phone}}</li>
+            <li><strong>Mobile</strong>: {{mobile_phone}}</li>
+            <h5>Location info</h5>
+            <li>{{street_address}}</li>
+            <li>{{city}}, {{state}} {{zip_code}}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Add a new contact -->
+    <form ng-submit="addFormSubmit()" ng-show="addFormShow">
         <h3>Add Contact</h3>
         <div class="row">
             <div class="large-6 columns">
@@ -17,7 +39,7 @@
         <div class="row">
             <div class="large-6 columns">
                 <label>Company:
-                    <input type="text" ng-model="company" placeholder="Contact Company" required />
+                    <input type="text" ng-model="company" placeholder="Contact Company" />
                 </label>
             </div>
             <div class="large-6 columns">
@@ -52,6 +74,11 @@
         </div>
         <div class="row">
             <div class="large-6 columns">
+                <label>State:
+                    <input type="text" ng-model="state" placeholder="State" />
+                </label>
+            </div>
+            <div class="large-6 columns">
                 <label>Zip Code:
                     <input type="text" ng-model="zip_code" placeholder="Zip Code" />
                 </label>
@@ -62,14 +89,80 @@
             <div class="large-6 columns">
                 <input type="submit" value="Add Contact" class="button radius" />
             </div>
+        </div>
+    </form>
+
+      <!-- Edit existing contact -->
+    <form ng-submit="editFormSubmit()" ng-show="editFormShow">
+        <h3>Edit Contact</h3>
+        <div class="row">
             <div class="large-6 columns">
-                <input type="button" ng-click="exitAddContactForm()" value="Cancel" class="button radius alert" />
+                <label>Name:
+                    <input type="text" ng-model="name" placeholder="Contact Name" required />
+                </label>
+            </div>
+            <div class="large-6 columns">
+                <label>Email:
+                    <input type="text" ng-model="email" placeholder="Contact Email" required />
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-6 columns">
+                <label>Company:
+                    <input type="text" ng-model="company" placeholder="Contact Company" />
+                </label>
+            </div>
+            <div class="large-6 columns">
+                <label>Work Phone:
+                    <input type="text" ng-model="work_phone" placeholder="Work Phone" />
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-6 columns">
+                <label>Home Phone:
+                    <input type="text" ng-model="home_phone" placeholder="Home Phone" />
+                </label>
+            </div>
+            <div class="large-6 columns">
+                <label>Mobile Phone:
+                    <input type="text" ng-model="mobile_phone" placeholder="Mobile Phone" />
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-6 columns">
+                <label>Street Address:
+                    <input type="text" ng-model="street_address" placeholder="Street Address" />
+                </label>
+            </div>
+            <div class="large-6 columns">
+                <label>City:
+                    <input type="text" ng-model="city" placeholder="City" />
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-6 columns">
+                <label>State:
+                    <input type="text" ng-model="state" placeholder="State" />
+                </label>
+            </div>
+            <div class="large-6 columns">
+                <label>Zip Code:
+                    <input type="text" ng-model="zip_code" placeholder="Zip Code" />
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-6 columns">
+                <input type="submit" value="Edit Contact" class="button radius" />
             </div>
         </div>
     </form>
 
-
-    <div class="large-10 columns">
         <h3>Your contacts</h3>
         <table>
             <thead>
@@ -82,7 +175,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="contact in contacts">
-                    <td>{{contact.name}}</td>
+                    <td><a ng-click="showContact(contact)">{{contact.name}}</a></td>
                     <td>{{contact.company}}</td>
                     <td>{{contact.email}}</td>
                     <td>
@@ -94,6 +187,10 @@
         </table>
     </div>
     <div class="small-12 large-2 columns">
-        <a class="button radius" ng-click="showAddContactForm()">+</a>
+        <a class="button radius" ng-click="showAddContactForm()" ng-hide="addFormShow">+</a>
+        <a class="button radius alert" ng-click="hide()" ng-show="addFormShow">-</a>
+        <a class="button radius alert" ng-click="hide()" ng-show="contactShow">Close contact</a>
+        <a class="button radius alert" ng-click="hide()" ng-show="editFormShow">Close edit</a>
+
     </div>
 </div>
